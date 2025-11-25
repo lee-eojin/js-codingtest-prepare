@@ -1,0 +1,34 @@
+{
+  "name": "js-codingtest-prepare",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "JavaScript 코딩테스트 준비 - 우테코 최종테스트 대비",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "jest --detectOpenHandles",
+    "test:watch": "jest --watch"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.25.8",
+    "@babel/preset-env": "^7.25.8",
+    "babel-jest": "^30.1.2",
+    "jest": "^30.2.0"
+  },
+  "dependencies": {
+    "@woowacourse/mission-utils": "^2.2.0"
+  },
+  "jest": {
+    "transform": {
+      "\\.js$": "babel-jest"
+    }
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env"
+    ]
+  },
+  "engines": {
+    "npm": ">=10.8.2",
+    "node": ">=22.19.0"
+  }
+}
