@@ -31,10 +31,8 @@ queue.shift();  // 앞에서 꺼내기 → 2
 console.log(queue);  // [3]
 ```
 
-| 메서드 | 설명 |
-|--------|------|
-| `push(값)` | 뒤에 넣기 |
-| `shift()` | 앞에서 꺼내기 (제거됨) |
+- `push(값)`: 뒤에 넣기
+- `shift()`: 앞에서 꺼내기 (제거됨)
 
 ## 큐가 동작하는 과정
 
@@ -180,11 +178,9 @@ function levelOrder(root) {
 
 ## 시간복잡도
 
-| 연산 | 시간복잡도 |
-|------|-----------|
-| push | O(1) |
-| shift | O(n) ⚠️ |
-| 맨 앞 확인 | O(1) |
+- push: O(1)
+- shift: O(n)
+- 맨 앞 확인: O(1)
 
 ### shift가 O(n)인 이유
 
@@ -237,12 +233,11 @@ function bfs(graph, start) {
 
 ## 스택 vs 큐 비교
 
-| | Stack | Queue |
-|--|-------|-------|
-| 순서 | 후입선출 (LIFO) | 선입선출 (FIFO) |
-| 넣기 | push | push |
-| 꺼내기 | pop | shift |
-| 용도 | DFS, 괄호 검사 | BFS, 최단거리 |
+Stack은 후입선출(LIFO)이고, Queue는 선입선출(FIFO)다.
+
+둘 다 push로 넣는다. 꺼낼 때가 다르다. Stack은 pop으로 뒤에서 꺼내고, Queue는 shift로 앞에서 꺼낸다.
+
+Stack은 DFS, 괄호 검사에 쓰고, Queue는 BFS, 최단거리에 쓴다.
 
 ## 주의사항
 
