@@ -1,276 +1,308 @@
 # Spread Operator
 
-## 한 줄 요약
+## 정의
 
-점 세 개(...)는 괄호를 벗겨준다.
-
----
-
-## 기본 문법
-
-마침표 3개를 연달아 찍으면 spread operator다.
-
-```javascript
-var 어레이 = ['hello', 'world'];
-console.log(어레이);      // ['hello', 'world']
-console.log(...어레이);   // hello world
-```
-
-배열에 붙이면 대괄호가 사라진다. 'hello', 'world'만 남는다.
+스프레드 연산자(Spread Operator)는 ES6에서 도입된 문법으로, 세 개의 점(`...`)을 사용하여 이터러블(배열, 문자열 등)을 개별 요소로 펼치거나 객체의 프로퍼티를 펼치는 역할을 한다.
 
 ---
 
-## 문자열에 붙이면
+## 기본 동작 원리
 
-문자열도 배열처럼 인덱스로 접근할 수 있다.
+스프레드 연산자는 배열이나 객체를 감싸고 있는 괄호를 제거하고 내부 요소들을 펼쳐놓는다고 이해할 수 있다.
 
-```javascript
-var 문자 = 'hello';
-console.log(문자[0]);  // 'h'
-console.log(문자[1]);  // 'e'
-```
-
-그래서 spread를 붙이면 글자가 하나씩 펼쳐진다.
+### 배열에서의 동작
 
 ```javascript
-var 문자 = 'hello';
-console.log(...문자);  // h e l l o
+const array = ['hello', 'world'];
+console.log(array);     // ['hello', 'world']
+console.log(...array);  // hello world
 ```
 
-`console.log('h', 'e', 'l', 'l', 'o')`랑 같다.
+배열에 스프레드 연산자를 적용하면 대괄호가 제거되고 개별 요소들이 펼쳐진다. `console.log(...array)`는 `console.log('hello', 'world')`와 동일하게 동작한다.
+
+### 문자열에서의 동작
+
+문자열은 이터러블 객체이므로 스프레드 연산자를 적용할 수 있다.
+
+```javascript
+const str = 'hello';
+console.log(...str);  // h e l l o
+```
+
+각 문자가 개별 요소로 펼쳐진다.
 
 ---
 
-## 활용 1: 배열 합치기
+## 배열 조작
+
+### 배열 합치기
+
+두 개 이상의 배열을 하나로 합칠 때 스프레드 연산자를 사용하면 간결하게 표현할 수 있다.
 
 ```javascript
-var a = [1, 2, 3];
-var b = [4, 5];
-var c = [...a, ...b];
+const arr1 = [1, 2, 3];
+const arr2 = [4, 5];
+const combined = [...arr1, ...arr2];
 
-console.log(c);  // [1, 2, 3, 4, 5]
+console.log(combined);  // [1, 2, 3, 4, 5]
 ```
 
-a와 b의 괄호를 벗기고 새 배열에 넣으면 합쳐진다.
-
----
-
-## 활용 2: 배열 복사
-
-등호로 복사하면 문제가 생긴다.
+기존 `concat` 메서드보다 직관적이며, 중간에 다른 요소를 삽입하는 것도 용이하다.
 
 ```javascript
-var a = [1, 2, 3];
-var b = a;
-
-a[0] = 100;
-console.log(b);  // [100, 2, 3]
+const combined = [...arr1, 'middle', ...arr2];
+// [1, 2, 3, 'middle', 4, 5]
 ```
 
-a를 수정했는데 b도 바뀐다. 왜? 등호는 값을 복사한 게 아니라 같은 배열을 가리키게 만든 것이다. 값 공유가 일어난다.
+### 배열 복사 (얕은 복사)
 
-spread로 복사하면 독립적인 배열이 된다.
+자바스크립트에서 배열을 등호(`=`)로 할당하면 참조가 복사되어 동일한 배열을 가리키게 된다.
 
 ```javascript
-var a = [1, 2, 3];
-var b = [...a];
+const original = [1, 2, 3];
+const reference = original;
 
-a[0] = 100;
-console.log(b);  // [1, 2, 3]
+original[0] = 100;
+console.log(reference);  // [100, 2, 3]
 ```
 
-a의 괄호를 벗기고 새 괄호로 감싸면 새로운 배열이 만들어진다. a와 b는 별개다.
-
----
-
-## 활용 3: 객체 합치기
-
-객체의 중괄호도 벗길 수 있다.
-
-```javascript
-var o1 = { a: 1, b: 2 };
-var o2 = { c: 3, ...o1 };
-
-console.log(o2);  // { c: 3, a: 1, b: 2 }
-```
-
-o1의 내용이 o2에 들어갔다.
-
----
-
-## 활용 4: 객체 복사
-
-배열과 마찬가지로 객체도 등호로 복사하면 값 공유가 일어난다.
-
-```javascript
-var o1 = { a: 1, b: 2 };
-var o2 = { ...o1 };
-
-o1.a = 100;
-console.log(o2);  // { a: 1, b: 2 }
-```
-
-spread로 복사하면 독립적인 객체가 된다.
-
----
-
-## 키 값 중복되면?
-
-```javascript
-var o1 = { a: 1, b: 2 };
-var o2 = { a: 3, ...o1 };
-
-console.log(o2);  // { a: 1, b: 2 }
-```
-
-같은 키가 있으면 뒤에 오는 게 이긴다. o2에 a: 3이 먼저 있고, ...o1에서 a: 1이 뒤에 왔으니 a: 1이 된다.
-
-순서를 바꾸면 결과도 바뀐다.
-
-```javascript
-var o1 = { a: 1, b: 2 };
-var o2 = { ...o1, a: 3 };
-
-console.log(o2);  // { a: 3, b: 2 }
-```
-
----
-
-## 주의할 점
-
-spread는 아무데서나 쓸 수 없다. 함수 소괄호, 배열 대괄호, 객체 중괄호 안에서만 쓴다.
-
-```javascript
-// 됨
-console.log(...[1, 2, 3]);
-var arr = [...[1, 2, 3]];
-var obj = { ...{ a: 1 } };
-
-// 안 됨
-...arr;  // 에러
-```
-
----
-
-## 코테에서
-
-배열 복사할 때 자주 쓴다.
+스프레드 연산자를 사용하면 새로운 배열을 생성하여 원본과 독립적인 복사본을 만들 수 있다.
 
 ```javascript
 const original = [1, 2, 3];
 const copy = [...original];
+
+original[0] = 100;
+console.log(copy);  // [1, 2, 3]
 ```
 
-Math.max에 배열 넘길 때도 쓴다.
-
-```javascript
-const numbers = [3, 1, 4, 1, 5];
-const max = Math.max(...numbers);  // 5
-```
-
-Math.max는 배열을 받지 않고 숫자들을 따로따로 받는다. spread로 괄호를 벗기면 된다.
+이는 얕은 복사(Shallow Copy)이므로 중첩된 객체나 배열은 여전히 참조를 공유한다는 점에 유의해야 한다.
 
 ---
 
-## 활용 5: 함수 파라미터에 배열 넣기
+## 객체 조작
 
-함수가 파라미터를 여러 개 받을 때, 배열에 있는 값들을 넣고 싶으면 spread를 쓴다.
+ES2018부터 객체에도 스프레드 연산자를 사용할 수 있다.
+
+### 객체 합치기
 
 ```javascript
-function 더하기(a, b, c) {
-  console.log(a + b + c);
+const obj1 = { a: 1, b: 2 };
+const obj2 = { c: 3, ...obj1 };
+
+console.log(obj2);  // { c: 3, a: 1, b: 2 }
+```
+
+### 객체 복사 (얕은 복사)
+
+```javascript
+const original = { a: 1, b: 2 };
+const copy = { ...original };
+
+original.a = 100;
+console.log(copy);  // { a: 1, b: 2 }
+```
+
+### 프로퍼티 덮어쓰기
+
+동일한 키가 존재할 경우, 나중에 오는 값이 이전 값을 덮어쓴다.
+
+```javascript
+const defaults = { theme: 'light', fontSize: 14 };
+const userSettings = { theme: 'dark' };
+
+const settings = { ...defaults, ...userSettings };
+console.log(settings);  // { theme: 'dark', fontSize: 14 }
+```
+
+스프레드 순서에 따라 결과가 달라지므로 순서에 주의해야 한다.
+
+---
+
+## 함수 호출 시 인수 전달
+
+배열의 요소들을 함수의 개별 인수로 전달할 때 스프레드 연산자가 유용하다.
+
+```javascript
+function add(a, b, c) {
+  return a + b + c;
 }
 
-var 어레이 = [10, 20, 30];
+const numbers = [1, 2, 3];
+console.log(add(...numbers));  // 6
 ```
 
-배열의 값들을 파라미터로 넣으려면?
+스프레드 연산자가 도입되기 전에는 `Function.prototype.apply`를 사용했다.
 
 ```javascript
-더하기(어레이[0], 어레이[1], 어레이[2]);  // 귀찮음
-더하기(...어레이);  // 간단
-```
+// ES6 이전 방식
+add.apply(null, numbers);
 
-spread로 괄호를 벗기면 `더하기(10, 20, 30)`이랑 같아진다.
+// ES6 이후 방식
+add(...numbers);
+```
 
 ---
 
-## apply, call 함수
+## apply와 call 메서드
 
-spread가 없던 시절엔 apply를 썼다.
+`apply`와 `call`은 함수의 `this`를 명시적으로 바인딩하면서 함수를 호출하는 메서드다. 스프레드 연산자의 등장 배경을 이해하는 데 도움이 된다.
 
-```javascript
-더하기(...어레이);           // 요즘 방식
-더하기.apply(undefined, 어레이);  // 옛날 방식
-```
-
-apply가 뭔지 알아보자.
-
-### apply 기본 개념
+### 기본 개념
 
 ```javascript
-var person = {
-  인사: function() {
-    console.log(this.name + ' 안녕');
+const person = {
+  greet: function() {
+    console.log(`Hello, ${this.name}`);
   }
 };
 
-var person2 = {
-  name: '손흥민'
-};
+const user = { name: 'Kim' };
+
+person.greet.call(user);   // Hello, Kim
+person.greet.apply(user);  // Hello, Kim
 ```
 
-person에 있는 인사() 함수를 person2에서 쓰고 싶다. person2에 함수를 새로 만들기 귀찮다.
+두 메서드 모두 첫 번째 인수로 `this`를 지정하고 함수를 실행한다.
 
-apply를 쓰면 된다.
+### call과 apply의 차이
 
-```javascript
-person.인사.apply(person2);  // '손흥민 안녕'
-```
-
-person.인사()를 실행하는데, person2에 적용해서 실행해라. 그래서 this가 person2가 된다.
-
-### call도 똑같다
+두 번째 이후 인수를 전달하는 방식이 다르다.
 
 ```javascript
-person.인사.apply(person2);
-person.인사.call(person2);
-```
-
-둘 다 결과는 같다.
-
-### apply vs call 차이
-
-파라미터 넣는 방식이 다르다.
-
-```javascript
-person.인사.apply(person2, [1, 2, 3]);  // 배열로 넣음
-person.인사.call(person2, 1, 2, 3);     // 따로따로 넣음
-```
-
-apply는 배열로, call은 따로따로.
-
-### 다시 아까 예제로 돌아오면
-
-```javascript
-function 더하기(a, b, c) {
-  console.log(a + b + c);
+function introduce(greeting, punctuation) {
+  console.log(`${greeting}, ${this.name}${punctuation}`);
 }
 
-var 어레이 = [10, 20, 30];
-더하기.apply(undefined, 어레이);
+const user = { name: 'Kim' };
+
+introduce.call(user, 'Hello', '!');     // Hello, Kim!
+introduce.apply(user, ['Hello', '!']);  // Hello, Kim!
 ```
 
-더하기() 함수를 실행하는데, undefined에 적용하고(아무데도 적용 안 함), 파라미터로 어레이를 넣어라.
+`call`은 인수를 개별적으로, `apply`는 배열로 전달한다. 스프레드 연산자가 도입된 이후로는 `apply` 대신 스프레드 연산자를 사용하는 것이 더 간결하다.
 
-apply는 배열을 풀어서 파라미터로 넣어준다. 그래서 `더하기(10, 20, 30)`이랑 같아진다.
+---
 
-undefined를 넣은 이유는 아무데도 적용할 필요가 없어서다. 빈칸으로 두면 에러나니까 아무 값이나 넣은 것.
+## 사용 제한
 
-### 결론
+스프레드 연산자는 특정 컨텍스트에서만 사용할 수 있다.
 
-spread 연산자가 생겨서 다행이다. apply보다 훨씬 직관적이다.
+- 함수 호출의 인수
+- 배열 리터럴
+- 객체 리터럴
+
+단독으로 사용하면 문법 오류가 발생한다.
 
 ```javascript
-더하기(...어레이);  // 이게 낫다
+// 유효한 사용
+console.log(...[1, 2, 3]);
+const arr = [...[1, 2, 3]];
+const obj = { ...{ a: 1 } };
+
+// 문법 오류
+...[1, 2, 3];  // SyntaxError
 ```
+
+---
+
+## 우테코 활용 예시
+
+### 배열 불변성 유지
+
+원본 배열을 변경하지 않고 새로운 배열을 생성할 때 스프레드 연산자를 활용한다.
+
+```javascript
+class Lotto {
+  #numbers;
+
+  constructor(numbers) {
+    this.#validate(numbers);
+    this.#numbers = [...numbers].sort((a, b) => a - b);
+  }
+
+  getNumbers() {
+    return [...this.#numbers];
+  }
+
+  #validate(numbers) {
+    // 유효성 검증 로직
+  }
+}
+```
+
+생성자에서 입력받은 배열을 복사하여 외부 변경으로부터 보호하고, getter에서도 복사본을 반환하여 내부 상태의 불변성을 유지한다.
+
+### Math 함수와 함께 사용
+
+배열에서 최댓값, 최솟값을 구할 때 스프레드 연산자가 유용하다.
+
+```javascript
+class RaceController {
+  #cars;
+
+  getWinners() {
+    const positions = this.#cars.map(car => car.getPosition());
+    const maxPosition = Math.max(...positions);
+    return this.#cars.filter(car => car.getPosition() === maxPosition);
+  }
+}
+```
+
+`Math.max`와 `Math.min`은 개별 숫자를 인수로 받으므로, 배열의 경우 스프레드 연산자로 펼쳐서 전달해야 한다.
+
+### 객체 병합을 통한 상태 업데이트
+
+기존 객체의 일부 프로퍼티만 변경할 때 스프레드 연산자를 활용한다.
+
+```javascript
+class GameResult {
+  #result;
+
+  constructor() {
+    this.#result = {
+      FIRST: 0,
+      SECOND: 0,
+      THIRD: 0,
+      FOURTH: 0,
+      FIFTH: 0,
+    };
+  }
+
+  addRank(rank) {
+    this.#result = {
+      ...this.#result,
+      [rank]: this.#result[rank] + 1,
+    };
+  }
+
+  getResult() {
+    return { ...this.#result };
+  }
+}
+```
+
+기존 상태를 펼치고 특정 프로퍼티만 덮어쓰는 패턴은 불변성을 유지하면서 상태를 업데이트할 때 자주 사용된다.
+
+### 함수 인수 전달
+
+여러 개의 값을 함수에 전달할 때 배열로 관리하다가 스프레드 연산자로 펼쳐서 전달한다.
+
+```javascript
+class LottoGenerator {
+  generate(count) {
+    return Array.from({ length: count }, () => this.#generateLotto());
+  }
+
+  #generateLotto() {
+    const numbers = Random.pickUniqueNumbersInRange(
+      LOTTO.MIN_NUMBER,
+      LOTTO.MAX_NUMBER,
+      LOTTO.COUNT
+    );
+    return new Lotto(numbers);
+  }
+}
+```
+
+`Random.pickUniqueNumbersInRange`가 반환하는 배열을 `Lotto` 생성자에 전달할 때, 생성자 내부에서 스프레드 연산자로 복사하여 사용한다.

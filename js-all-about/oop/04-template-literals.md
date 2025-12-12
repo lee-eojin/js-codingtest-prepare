@@ -1,134 +1,172 @@
 # Template Literals
 
-## 한 줄 요약
+## 정의
 
-백틱(`)으로 문자열을 만들면 엔터, 변수 삽입이 편하다.
+템플릿 리터럴(Template Literals)은 ES6에서 도입된 문자열 표기법으로, 백틱(`` ` ``)을 사용하여 문자열을 정의한다. 기존 따옴표 방식과 달리 여러 줄 문자열과 표현식 삽입을 지원하여 동적 문자열 생성을 간결하게 처리할 수 있다.
 
 ---
 
 ## 기본 문법
 
-따옴표 대신 백틱(`)을 쓴다. 키보드에서 물결(~) 아래에 있다.
+백틱(`` ` ``)으로 문자열을 감싸서 정의한다. 키보드에서 숫자 1 왼쪽, 물결표(~) 아래에 위치한 키다.
 
 ```javascript
-var 문자 = `안녕하세요`;
+const message = `Hello, World!`;
 ```
 
 ---
 
-## 장점 1: 엔터키 가능
+## 여러 줄 문자열 (Multi-line Strings)
 
-기존 따옴표 문자열은 중간에 엔터치면 에러난다.
+기존 따옴표 문자열에서 줄바꿈을 포함하려면 이스케이프 문자(`\n`)를 사용하거나 문자열을 연결해야 했다.
 
 ```javascript
-// 에러
-var 문자 = '안녕
-하세요';
+// 기존 방식
+const message = '첫 번째 줄\n두 번째 줄';
+
+// 또는
+const message = '첫 번째 줄' +
+  '두 번째 줄';
 ```
 
-백틱은 엔터가 자유롭다.
+템플릿 리터럴에서는 줄바꿈을 그대로 포함할 수 있다.
 
 ```javascript
-// 정상 작동
-var 문자 = `안녕
-하세요`;
+const message = `첫 번째 줄
+두 번째 줄`;
+```
+
+소스 코드에서 입력한 줄바꿈이 문자열에 그대로 반영되므로 가독성이 향상된다.
+
+---
+
+## 표현식 삽입 (Expression Interpolation)
+
+`${expression}` 구문을 사용하여 문자열 내에 표현식을 삽입할 수 있다. 표현식은 평가된 후 문자열로 변환되어 삽입된다.
+
+### 변수 삽입
+
+```javascript
+const name = 'Kim';
+const age = 25;
+
+// 기존 방식: 문자열 연결
+const message = '이름: ' + name + ', 나이: ' + age;
+
+// 템플릿 리터럴
+const message = `이름: ${name}, 나이: ${age}`;
+```
+
+### 표현식 삽입
+
+단순 변수뿐 아니라 모든 자바스크립트 표현식을 삽입할 수 있다.
+
+```javascript
+const a = 10;
+const b = 20;
+
+console.log(`합계: ${a + b}`);  // '합계: 30'
+console.log(`최댓값: ${Math.max(a, b)}`);  // '최댓값: 20'
+console.log(`조건: ${a > b ? 'a가 크다' : 'b가 크다'}`);  // '조건: b가 크다'
 ```
 
 ---
 
-## 장점 2: 변수 삽입이 편함
+## Tagged Templates (태그드 템플릿)
 
-기존 방식은 + 로 문자를 쪼개서 연결해야 했다.
-
-```javascript
-var 이름 = '손흥민';
-var 문자 = '안녕하세요 ' + 이름 + ' 입니다';
-```
-
-백틱은 ${} 안에 변수를 넣으면 된다.
+템플릿 리터럴 앞에 함수를 붙여서 호출하면 문자열의 각 부분을 분리하여 처리할 수 있다. 이를 태그드 템플릿(Tagged Templates)이라고 한다.
 
 ```javascript
-var 이름 = '손흥민';
-var 문자 = `안녕하세요 ${이름} 입니다`;
-```
-
-훨씬 읽기 쉽다.
-
----
-
-## 실용적인 사용: HTML 템플릿
-
-HTML을 문자열로 만들 때 유용하다.
-
-```javascript
-var 이름 = 'Kim';
-var html = `
-<div>
-  <h1>${이름}님 환영합니다</h1>
-  <p>오늘도 좋은 하루 되세요</p>
-</div>
-`;
-```
-
-엔터도 되고 변수도 쉽게 넣을 수 있어서 템플릿 만들기 좋다.
-
----
-
-## Tagged Literals (심화)
-
-함수를 소괄호 대신 백틱 문자열로 실행할 수 있다. 문자열을 해체분석할 때 쓴다.
-
-```javascript
-var 변수 = '손흥민';
-
-function 해체분석기(문자들, 변수들) {
-  console.log(문자들);
-  console.log(변수들);
+function tag(strings, ...values) {
+  console.log(strings);  // ['Hello, ', '! You are ', ' years old.']
+  console.log(values);   // ['Kim', 25]
 }
 
-해체분석기`안녕하세요 ${변수} 입니다`;
+const name = 'Kim';
+const age = 25;
+
+tag`Hello, ${name}! You are ${age} years old.`;
 ```
 
-소괄호 대신 백틱 문자열을 붙여서 함수를 실행했다.
+첫 번째 매개변수 `strings`는 표현식으로 분리된 문자열 조각들의 배열이다. 나머지 매개변수들은 삽입된 표현식들의 값이다.
 
-첫 번째 파라미터(문자들)는 순수 문자만 모은 배열이다. ${} 기준으로 쪼갠다.
-
-```
-'안녕하세요 ${변수} 입니다'
-
-→ 문자들 = ['안녕하세요 ', ' 입니다']
-→ 변수들 = '손흥민'
-```
-
-두 번째 파라미터(변수들)는 ${} 안에 있던 변수 값이다.
-
-```javascript
-var 변수 = '손흥민';
-
-function 해체분석기(문자들, 변수들) {
-  console.log(문자들[1] + 변수들);
-}
-
-해체분석기`안녕하세요 ${변수} 입니다`;
-// ' 입니다손흥민'
-```
-
-문자들[1]은 ' 입니다'이고, 변수들은 '손흥민'이다. 합치면 ' 입니다손흥민'.
-
-이렇게 문자열을 해체해서 재조합할 수 있다. 실제로 쓸 일은 많지 않지만 라이브러리에서 가끔 보인다.
+태그드 템플릿은 직접 작성할 일은 적지만, `styled-components` 같은 CSS-in-JS 라이브러리에서 이 문법을 사용한다.
 
 ---
 
-## 코테에서
+## 우테코 활용 예시
 
-코테에서 template literals는 출력할 때 주로 쓴다.
+### 결과 출력 포맷팅
+
+콘솔 출력 시 여러 값을 조합하여 출력할 때 템플릿 리터럴을 사용하면 가독성이 높아진다.
 
 ```javascript
-const name = 'pobi';
-const position = 3;
+class OutputView {
+  static printRoundResult(cars) {
+    cars.forEach(car => {
+      const { name, position } = car.getStatus();
+      Console.print(`${name} : ${'-'.repeat(position)}`);
+    });
+  }
 
-console.log(`${name} : ${'-'.repeat(position)}`);
-// 'pobi : ---'
+  static printWinners(winners) {
+    const winnerNames = winners.map(car => car.getName()).join(', ');
+    Console.print(`최종 우승자 : ${winnerNames}`);
+  }
+}
 ```
 
-문자열 조합이 필요할 때 + 대신 백틱 쓰면 깔끔하다.
+문자열 연결 연산자(`+`)를 사용하는 것보다 출력 형식을 직관적으로 파악할 수 있다.
+
+### 에러 메시지 생성
+
+에러 메시지에 동적 값을 포함할 때 템플릿 리터럴을 활용한다.
+
+```javascript
+const ERROR_MESSAGE = Object.freeze({
+  INVALID_NAME_LENGTH: (maxLength) =>
+    `[ERROR] 자동차 이름은 ${maxLength}자 이하만 가능합니다.`,
+  INSUFFICIENT_STOCK: (productName, requestedQuantity) =>
+    `[ERROR] ${productName}의 재고가 부족합니다. 요청 수량: ${requestedQuantity}`,
+  INVALID_NUMBER_RANGE: (min, max) =>
+    `[ERROR] 숫자는 ${min}부터 ${max} 사이의 값이어야 합니다.`,
+});
+
+throw new Error(ERROR_MESSAGE.INVALID_NAME_LENGTH(5));
+```
+
+에러 메시지 템플릿을 함수로 정의하면 동적 값을 포함하면서도 메시지를 상수로 관리할 수 있다.
+
+### 입력 프롬프트 메시지
+
+사용자 입력을 받을 때 안내 메시지를 구성하는 데 활용한다.
+
+```javascript
+const INPUT_MESSAGE = Object.freeze({
+  PRICE: '구입금액을 입력해 주세요.\n',
+  CAR_NAMES: '경주할 자동차 이름을 입력하세요.(이름은 쉼표(,) 기준으로 구분)\n',
+  ROUND_COUNT: '시도할 횟수는 몇 회인가요?\n',
+});
+```
+
+### 통계 결과 포맷팅
+
+복잡한 형식의 출력을 구성할 때 템플릿 리터럴의 여러 줄 지원을 활용한다.
+
+```javascript
+class LottoResultFormatter {
+  static format(result, earningRate) {
+    return `
+당첨 통계
+---
+3개 일치 (5,000원) - ${result.FIFTH}개
+4개 일치 (50,000원) - ${result.FOURTH}개
+5개 일치 (1,500,000원) - ${result.THIRD}개
+5개 일치, 보너스 볼 일치 (30,000,000원) - ${result.SECOND}개
+6개 일치 (2,000,000,000원) - ${result.FIRST}개
+총 수익률은 ${earningRate}%입니다.`.trim();
+  }
+}
+```
+
+여러 줄에 걸친 출력 형식을 소스 코드에서 시각적으로 확인할 수 있어 유지보수가 용이하다. `trim()`을 사용하여 앞뒤 공백을 제거한다.
