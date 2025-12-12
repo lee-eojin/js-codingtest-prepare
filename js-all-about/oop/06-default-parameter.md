@@ -148,40 +148,76 @@ outer(1, 2, 3);  // Arguments(3) [1, 2, 3]
 
 ## Rest Parameter (나머지 매개변수)
 
-ES6에서 도입된 Rest Parameter는 `arguments` 객체의 현대적인 대안이다. 세 개의 점(`...`)과 매개변수명을 사용하여 정의한다.
+ES6에서 도입된 Rest Parameter는 `arguments` 객체의 현대적인 대안이다. 세 개의 점(`...`)과 매개변수명을 사용하여 정의한다. 해당 위치에 전달되는 모든 인수를 배열로 묶어준다.
 
 ```javascript
-function sum(...numbers) {
-  return numbers.reduce((acc, curr) => acc + curr, 0);
+function showAll(...params) {
+  console.log(params);
 }
 
-console.log(sum(1, 2, 3, 4, 5));  // 15
+showAll(1, 2, 3, 4, 5);  // [1, 2, 3, 4, 5]
 ```
 
-### Rest Parameter의 장점
+`params`는 전달된 모든 인수를 담은 실제 배열이다. `arguments`와 달리 배열 메서드를 바로 사용할 수 있다.
 
-Rest Parameter는 실제 배열이므로 배열 메서드를 직접 사용할 수 있다.
-
-```javascript
-function double(...numbers) {
-  return numbers.map(x => x * 2);
-}
-
-console.log(double(1, 2, 3));  // [2, 4, 6]
-```
+### 다른 매개변수와 함께 사용
 
 일부 매개변수를 개별로 받고 나머지를 배열로 받을 수 있다.
 
 ```javascript
-function greetAll(greeting, ...names) {
-  return names.map(name => `${greeting}, ${name}!`);
+function showRest(a, b, ...rest) {
+  console.log(a);     // 1
+  console.log(b);     // 2
+  console.log(rest);  // [3, 4, 5, 6, 7]
 }
 
-console.log(greetAll('Hello', 'Kim', 'Park', 'Lee'));
-// ['Hello, Kim!', 'Hello, Park!', 'Hello, Lee!']
+showRest(1, 2, 3, 4, 5, 6, 7);
 ```
 
-Rest Parameter는 반드시 마지막 매개변수여야 한다.
+첫 번째 인수는 `a`, 두 번째는 `b`에 할당되고, 그 뒤에 오는 나머지 인수들이 `rest` 배열에 담긴다.
+
+### 사용 제한사항
+
+Rest Parameter는 반드시 마지막 매개변수여야 한다. 중간에 위치하면 문법 오류가 발생한다.
+
+```javascript
+// SyntaxError: Rest parameter must be last formal parameter
+function invalid(a, ...rest, b) {
+  console.log(rest);
+}
+```
+
+또한 Rest Parameter는 하나만 사용할 수 있다. 두 개 이상 선언하면 오류가 발생한다.
+
+```javascript
+// SyntaxError: Rest parameter must be last formal parameter
+function invalid(...rest1, ...rest2) {
+  console.log(rest1);
+}
+```
+
+### arguments와의 비교
+
+Rest Parameter는 `arguments`보다 권장되는 방식이다.
+
+```javascript
+// arguments 방식: 유사 배열, 변환 필요
+function sumOld() {
+  const arr = [...arguments];
+  return arr.reduce((acc, curr) => acc + curr, 0);
+}
+
+// Rest Parameter 방식: 실제 배열, 바로 사용 가능
+function sumNew(...numbers) {
+  return numbers.reduce((acc, curr) => acc + curr, 0);
+}
+```
+
+Rest Parameter는 화살표 함수에서도 사용 가능하다는 점에서 `arguments`보다 유연하다.
+
+```javascript
+const sum = (...numbers) => numbers.reduce((acc, curr) => acc + curr, 0);
+```
 
 ---
 
