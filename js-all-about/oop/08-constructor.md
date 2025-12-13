@@ -16,8 +16,8 @@ function Student() {
   this.age = 15;
 }
 
-var student1 = new Student();
-var student2 = new Student();
+const student1 = new Student();
+const student2 = new Student();
 
 console.log(student1);  // { name: 'Kim', age: 15 }
 console.log(student2);  // { name: 'Kim', age: 15 }
@@ -41,8 +41,8 @@ function Student(name, age) {
   this.age = age;
 }
 
-var student1 = new Student('Kim', 15);
-var student2 = new Student('Park', 16);
+const student1 = new Student('Kim', 15);
+const student2 = new Student('Park', 16);
 
 console.log(student1);  // { name: 'Kim', age: 15 }
 console.log(student2);  // { name: 'Park', age: 16 }
@@ -65,7 +65,7 @@ function Student(name, age) {
   };
 }
 
-var student1 = new Student('Kim', 15);
+const student1 = new Student('Kim', 15);
 student1.sayHi();  // '안녕하세요 Kim'
 ```
 
@@ -82,8 +82,8 @@ function Student(name) {
   this.name = name;
 }
 
-var student1 = new Student('Kim');  // student1은 Student의 인스턴스
-var student2 = new Student('Park'); // student2도 Student의 인스턴스
+const student1 = new Student('Kim');  // student1은 Student의 인스턴스
+const student2 = new Student('Park'); // student2도 Student의 인스턴스
 ```
 
 ---
@@ -94,8 +94,8 @@ var student2 = new Student('Park'); // student2도 Student의 인스턴스
 
 ```javascript
 // 등호 복사: 참조 공유
-var obj1 = { name: 'Kim' };
-var obj2 = obj1;
+const obj1 = { name: 'Kim' };
+const obj2 = obj1;
 obj1.name = 'Park';
 console.log(obj2.name);  // 'Park' (같이 바뀜)
 
@@ -103,8 +103,8 @@ console.log(obj2.name);  // 'Park' (같이 바뀜)
 function Person(name) {
   this.name = name;
 }
-var person1 = new Person('Kim');
-var person2 = new Person('Kim');
+const person1 = new Person('Kim');
+const person2 = new Person('Kim');
 person1.name = 'Park';
 console.log(person2.name);  // 'Kim' (영향 없음)
 ```
@@ -129,8 +129,8 @@ function Car(name) {
   };
 }
 
-var car1 = new Car('pobi');
-var car2 = new Car('woni');
+const car1 = new Car('pobi');
+const car2 = new Car('woni');
 
 car1.move();
 car1.move();
@@ -151,10 +151,10 @@ function Lotto(numbers) {
   };
 }
 
-var lotto1 = new Lotto([1, 2, 3, 4, 5, 6]);
-var lotto2 = new Lotto([7, 8, 9, 10, 11, 12]);
+const lotto1 = new Lotto([1, 2, 3, 4, 5, 6]);
+const lotto2 = new Lotto([7, 8, 9, 10, 11, 12]);
 
-var winning = [1, 2, 3, 7, 8, 9];
+const winning = [1, 2, 3, 7, 8, 9];
 console.log(lotto1.getMatchCount(winning));  // 3
 console.log(lotto2.getMatchCount(winning));  // 3
 ```
@@ -175,8 +175,8 @@ function Product(name, price) {
   };
 }
 
-var product1 = new Product('shirts', 50000);
-var product2 = new Product('pants', 60000);
+const product1 = new Product('shirts', 50000);
+const product2 = new Product('pants', 60000);
 
 console.log(product1.getVat());        // 5000
 console.log(product2.getTotalPrice()); // 66000

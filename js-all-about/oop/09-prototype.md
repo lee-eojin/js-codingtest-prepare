@@ -29,8 +29,8 @@ function Student() {
 
 Student.prototype.gender = '남';
 
-var student1 = new Student();
-var student2 = new Student();
+const student1 = new Student();
+const student2 = new Student();
 
 console.log(student1.gender);  // '남'
 console.log(student2.gender);  // '남'
@@ -56,7 +56,7 @@ function Student() {
 
 Student.prototype.gender = '남';
 
-var student1 = new Student();
+const student1 = new Student();
 
 console.log(student1.name);    // 'Kim' (자신이 가진 프로퍼티)
 console.log(student1.gender);  // '남' (prototype에서 찾음)
@@ -71,10 +71,10 @@ console.log(student1.gender);  // '남' (prototype에서 찾음)
 배열에서 사용하는 `sort`, `push`, `map`, `forEach` 같은 메서드들도 prototype 덕분에 사용 가능하다.
 
 ```javascript
-var arr = [1, 2, 3];
+const arr = [1, 2, 3];
 
 // 위 코드는 사실 이것과 같다
-var arr = new Array(1, 2, 3);
+const arr = new Array(1, 2, 3);
 ```
 
 배열은 `Array`라는 constructor로부터 생성된 인스턴스다. `Array.prototype`에 내장 메서드들이 정의되어 있기 때문에 모든 배열에서 사용할 수 있다.
@@ -87,10 +87,10 @@ console.log(Array.prototype);
 객체도 마찬가지다.
 
 ```javascript
-var obj = { name: 'Kim' };
+const obj = { name: 'Kim' };
 
 // 위 코드는 사실 이것과 같다
-var obj = new Object();
+const obj = new Object();
 obj.name = 'Kim';
 ```
 
@@ -119,8 +119,8 @@ Student.prototype.introduce = function() {
 ```
 
 ```javascript
-var s1 = new Student('Kim');
-var s2 = new Student('Park');
+const s1 = new Student('Kim');
+const s2 = new Student('Park');
 
 // constructor 것: 각자 가짐
 console.log(s1.sayHi === s2.sayHi);  // false (별개의 함수)
@@ -181,8 +181,8 @@ Lotto.prototype.hasNumber = function(number) {
   return this.numbers.includes(number);
 };
 
-var lotto1 = new Lotto([1, 2, 3, 4, 5, 6]);
-var lotto2 = new Lotto([7, 8, 9, 10, 11, 12]);
+const lotto1 = new Lotto([1, 2, 3, 4, 5, 6]);
+const lotto2 = new Lotto([7, 8, 9, 10, 11, 12]);
 
 console.log(lotto1.getMatchCount([1, 2, 3, 7, 8, 9]));  // 3
 console.log(lotto1.hasNumber(3));  // true

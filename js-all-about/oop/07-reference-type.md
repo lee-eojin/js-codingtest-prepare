@@ -11,8 +11,8 @@
 문자(string), 숫자(number), 불리언(boolean), null, undefined, Symbol, BigInt가 Primitive 타입에 해당한다. 이 타입들은 값 자체가 변수에 직접 저장된다.
 
 ```javascript
-var name = 'john';
-var age = 20;
+const name = 'john';
+const age = 20;
 ```
 
 `name` 변수에는 `'john'`이라는 문자열 값 자체가 저장된다. 다른 곳을 참조하는 것이 아니라 실제 데이터가 변수 공간에 들어있다.
@@ -24,7 +24,7 @@ var age = 20;
 Object, Array, Function이 Reference 타입에 해당한다. 이 타입들은 실제 데이터가 변수에 저장되는 것이 아니라, 데이터가 위치한 메모리 주소(참조)가 저장된다.
 
 ```javascript
-var person = { name: 'Kim' };
+const person = { name: 'Kim' };
 ```
 
 `person` 변수에는 `{ name: 'Kim' }` 객체 자체가 아니라, 해당 객체가 메모리 어딘가에 있다는 참조(주소)가 저장된다. 변수는 실제 데이터를 가리키는 화살표를 들고 있을 뿐이다.
@@ -38,8 +38,8 @@ var person = { name: 'Kim' };
 Primitive 타입은 값 자체가 복사되므로 원본과 복사본이 완전히 독립적이다.
 
 ```javascript
-var 이름1 = '김';
-var 이름2 = 이름1;  // '김' 값 자체를 복사
+let 이름1 = '김';
+const 이름2 = 이름1;  // '김' 값 자체를 복사
 이름1 = '박';
 
 console.log(이름1);  // '박'
@@ -53,8 +53,8 @@ console.log(이름2);  // '김' (영향 없음)
 Reference 타입은 참조(주소)가 복사되므로 원본과 복사본이 같은 데이터를 가리키게 된다.
 
 ```javascript
-var 이름1 = { name: '김' };
-var 이름2 = 이름1;  // 참조(화살표)를 복사
+const 이름1 = { name: '김' };
+const 이름2 = 이름1;  // 참조(화살표)를 복사
 이름1.name = '박';
 
 console.log(이름1);  // { name: '박' }
@@ -76,8 +76,8 @@ console.log(이름2);  // { name: '박' } (같이 바뀜)
 새로운 객체를 할당할 때마다 새로운 참조(화살표)가 생성된다. 객체를 비교할 때는 내용이 아닌 참조를 비교한다.
 
 ```javascript
-var 이름1 = { name: '김' };
-var 이름2 = { name: '김' };
+const 이름1 = { name: '김' };
+const 이름2 = { name: '김' };
 
 console.log(이름1 == 이름2);   // false
 console.log(이름1 === 이름2);  // false
@@ -93,8 +93,8 @@ console.log(이름1 === 이름2);  // false
 같은 참조를 공유할 때만 `true`가 된다.
 
 ```javascript
-var 이름1 = { name: '김' };
-var 이름2 = 이름1;  // 같은 참조 공유
+const 이름1 = { name: '김' };
+const 이름2 = 이름1;  // 같은 참조 공유
 
 console.log(이름1 === 이름2);  // true
 ```
@@ -114,7 +114,7 @@ console.log(이름1.name === 이름2.name);  // true
 ### 프로퍼티 수정은 원본에 영향
 
 ```javascript
-var 이름1 = { name: '김' };
+const 이름1 = { name: '김' };
 
 function 변경(obj) {
   obj.name = 'park';  // 화살표 타고 들어가서 프로퍼티 수정
@@ -129,7 +129,7 @@ console.log(이름1);  // { name: 'park' }
 ### 재할당은 원본에 영향 없음
 
 ```javascript
-var 이름1 = { name: '김' };
+const 이름1 = { name: '김' };
 
 function 변경(obj) {
   obj = { name: 'park' };  // obj에 새로운 화살표 할당
