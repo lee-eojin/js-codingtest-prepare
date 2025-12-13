@@ -158,6 +158,89 @@ Car.prototype.getStatus = function() {
 
 ---
 
+## 부모 prototype 확인하기
+
+자식 객체에서 부모 prototype을 확인하는 방법이 있다.
+
+```javascript
+const arr = [1, 2, 3];
+
+// 비권장 (레거시)
+console.log(arr.__proto__);
+
+// 권장
+console.log(Object.getPrototypeOf(arr));  // Array.prototype
+```
+
+부모 constructor가 무엇인지도 확인할 수 있다.
+
+```javascript
+const arr = [1, 2, 3];
+console.log(arr.constructor);  // [Function: Array]
+
+function Student(name) {
+  this.name = name;
+}
+const student = new Student('Kim');
+console.log(student.constructor);  // [Function: Student]
+```
+
+---
+
+## 모든 것의 부모는 Object
+
+prototype을 계속 타고 올라가면 최종적으로 `Object.prototype`에 도달한다.
+
+```javascript
+const arr = [1, 2, 3];
+
+console.log(Object.getPrototypeOf(arr));  // Array.prototype
+console.log(Object.getPrototypeOf(Object.getPrototypeOf(arr)));  // Object.prototype
+console.log(Object.getPrototypeOf(Object.getPrototypeOf(Object.getPrototypeOf(arr))));  // null
+```
+
+배열, 문자열, 객체 모두 최상위에 `Object.prototype`이 있다. 이것이 "자바스크립트는 모든 것이 객체다"라는 말의 근거다.
+
+---
+
+## prototype 조작하기
+
+### Object.setPrototypeOf
+
+기존 객체의 prototype을 다른 객체로 변경할 수 있다.
+
+```javascript
+const obj = {};
+const proto = {
+  sayHi() {
+    console.log('안녕');
+  }
+};
+
+Object.setPrototypeOf(obj, proto);
+obj.sayHi();  // '안녕'
+```
+
+### Object.create
+
+새 객체를 생성하면서 prototype을 지정할 수 있다.
+
+```javascript
+const parent = { name: 'Kim', age: 50 };
+const child = Object.create(parent);
+child.age = 20;
+const grandchild = Object.create(child);
+
+console.log(grandchild.name);  // 'Kim' (parent에서 찾음)
+console.log(grandchild.age);   // 20 (child에서 찾음)
+```
+
+`grandchild.name`을 호출하면 grandchild → child → parent 순으로 탐색하여 `'Kim'`을 반환한다. child에서 `age`를 재정의했기 때문에 parent의 `age: 50`은 가려진다(shadowing).
+
+실무에서는 prototype을 직접 조작하기보다 `class` 문법을 사용한다.
+
+---
+
 ## 우테코 활용 예시
 
 ### prototype으로 메서드 정의
