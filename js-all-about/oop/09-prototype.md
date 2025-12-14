@@ -241,6 +241,40 @@ console.log(grandchild.age);   // 20 (child에서 찾음)
 
 ---
 
+## prototype 메서드에 화살표 함수 금지
+
+prototype에 메서드를 추가할 때 화살표 함수를 사용하면 `this`가 의도대로 동작하지 않는다.
+
+```javascript
+function Student(name) {
+  this.name = name;
+}
+
+// 잘못된 예: 화살표 함수
+Student.prototype.sayHi = () => {
+  console.log('안녕 ' + this.name);  // this가 window (또는 undefined)
+};
+
+const student = new Student('Kim');
+student.sayHi();  // '안녕 undefined'
+```
+
+화살표 함수는 자신만의 `this`를 생성하지 않고 외부 스코프의 `this`를 그대로 사용한다. prototype에 추가하는 시점의 외부 `this`는 전역 객체이므로 인스턴스를 참조하지 못한다.
+
+```javascript
+// 올바른 예: 일반 함수
+Student.prototype.sayHi = function() {
+  console.log('안녕 ' + this.name);  // this가 인스턴스
+};
+
+const student = new Student('Kim');
+student.sayHi();  // '안녕 Kim'
+```
+
+일반 함수는 호출 시점에 `this`가 결정되므로 `student.sayHi()` 형태로 호출하면 `this`가 `student`를 가리킨다.
+
+---
+
 ## 우테코 활용 예시
 
 ### prototype으로 메서드 정의
