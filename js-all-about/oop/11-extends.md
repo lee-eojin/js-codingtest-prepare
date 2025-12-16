@@ -219,6 +219,119 @@ console.log(seller.getInfo());  // 'park (samsung)'
 
 ---
 
+## instanceof 연산자
+
+`instanceof`는 객체가 특정 class로부터 생성되었는지 확인하는 연산자다. 상속 관계도 확인할 수 있어서 extends와 함께 유용하게 사용된다.
+
+```javascript
+class User {
+  constructor(id) {
+    this.id = id;
+  }
+}
+
+class SellerUser extends User {
+  constructor(id) {
+    super(id);
+  }
+}
+
+const user = new User('kim');
+const seller = new SellerUser('park');
+
+console.log(user instanceof User);        // true
+console.log(user instanceof SellerUser);  // false
+
+console.log(seller instanceof SellerUser);  // true
+console.log(seller instanceof User);        // true (부모도 true)
+```
+
+seller는 SellerUser의 인스턴스이면서 동시에 User의 인스턴스이기도 하다. instanceof는 prototype chain을 따라 올라가면서 확인하기 때문이다.
+
+### 타입 검사에 활용
+
+instanceof를 사용하면 객체의 타입에 따라 다른 처리를 할 수 있다.
+
+```javascript
+class Car {
+  #name;
+
+  constructor(name) {
+    this.#name = name;
+  }
+
+  getName() {
+    return this.#name;
+  }
+}
+
+class FastCar extends Car {
+  constructor(name) {
+    super(name);
+  }
+}
+
+function printCarType(car) {
+  if (car instanceof FastCar) {
+    console.log(`${car.getName()}는 빠른 자동차입니다.`);
+  } else if (car instanceof Car) {
+    console.log(`${car.getName()}는 일반 자동차입니다.`);
+  } else {
+    console.log('자동차가 아닙니다.');
+  }
+}
+
+const normalCar = new Car('pobi');
+const fastCar = new FastCar('woni');
+
+printCarType(normalCar);  // 'pobi는 일반 자동차입니다.'
+printCarType(fastCar);    // 'woni는 빠른 자동차입니다.'
+printCarType({});         // '자동차가 아닙니다.'
+```
+
+주의할 점은 더 구체적인 타입(자식)을 먼저 검사해야 한다. FastCar도 Car의 인스턴스이기 때문에 Car를 먼저 검사하면 FastCar가 구분되지 않는다.
+
+### 내장 객체에도 사용 가능
+
+instanceof는 배열, 함수 등 내장 객체에도 사용할 수 있다.
+
+```javascript
+const arr = [1, 2, 3];
+const obj = { name: 'Kim' };
+const func = function() {};
+
+console.log(arr instanceof Array);    // true
+console.log(arr instanceof Object);   // true (Array도 Object를 상속)
+console.log(obj instanceof Object);   // true
+console.log(func instanceof Function); // true
+console.log(func instanceof Object);  // true (Function도 Object를 상속)
+```
+
+모든 것이 Object를 상속하기 때문에 `instanceof Object`는 거의 항상 true다.
+
+### typeof와의 차이
+
+typeof는 원시 타입을 확인하고, instanceof는 객체의 생성자를 확인한다.
+
+```javascript
+const arr = [1, 2, 3];
+
+console.log(typeof arr);           // 'object'
+console.log(arr instanceof Array); // true
+
+const num = 42;
+const numObj = new Number(42);
+
+console.log(typeof num);              // 'number'
+console.log(num instanceof Number);   // false (원시 타입)
+console.log(typeof numObj);           // 'object'
+console.log(numObj instanceof Number); // true
+```
+
+배열인지 확인할 때 typeof는 'object'만 반환하므로 instanceof Array를 사용해야 정확하다. 또는 `Array.isArray(arr)`를 사용할 수도 있다.
+
+---
+
 ## 상속의 주의점
 
 상속을 여러 단계로 연결하면 구조가 복잡해진다. 부모 → 자식 → 손자 형태의 상속 체인이 길어지면 코드 파악이 어려워지므로 적당한 깊이를 유지하는 것이 좋다.
@@ -390,3 +503,4 @@ class OutputView extends View {
 - inheritance(상속): class 간에 속성과 메서드를 물려받는 것
 - overriding(오버라이딩): 부모 메서드를 자식에서 재정의하는 것
 - parent/child class: 부모/자식 관계의 class (base/derived라고도 함)
+- instanceof: 객체가 특정 class의 인스턴스인지 확인하는 연산자
