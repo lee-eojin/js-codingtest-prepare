@@ -272,13 +272,17 @@ class FastCar extends Car {
 }
 
 function printCarType(car) {
+  if (!(car instanceof Car)) {
+    console.log('자동차가 아닙니다.');
+    return;
+  }
+
   if (car instanceof FastCar) {
     console.log(`${car.getName()}는 빠른 자동차입니다.`);
-  } else if (car instanceof Car) {
-    console.log(`${car.getName()}는 일반 자동차입니다.`);
-  } else {
-    console.log('자동차가 아닙니다.');
+    return;
   }
+
+  console.log(`${car.getName()}는 일반 자동차입니다.`);
 }
 
 const normalCar = new Car('pobi');
