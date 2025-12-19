@@ -114,6 +114,63 @@ setTimeout 콜백 안에서 resolve()를 호출하면, 1초 후에 then()이 실
 
 ---
 
+## 예시 4: 이미지 로딩
+
+이미지가 로드되면 성공, 실패하면 에러를 처리한다.
+
+```javascript
+const 프로미스 = new Promise((resolve, reject) => {
+  const img = document.querySelector('#test');
+
+  img.addEventListener('load', () => {
+    resolve('이미지 로딩 성공');
+  });
+
+  img.addEventListener('error', () => {
+    reject('이미지 로딩 실패');
+  });
+});
+
+프로미스
+  .then((result) => console.log(result))
+  .catch((error) => console.log(error));
+```
+
+이벤트리스너 안에서 resolve/reject를 호출하면 된다.
+
+---
+
+## 예시 5: 함수로 Promise 감싸기
+
+Promise를 리턴하는 함수를 만들면 재사용이 편하다.
+
+```javascript
+function delay(ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
+
+// 사용
+delay(1000).then(() => {
+  console.log('1초 후');
+});
+
+// 체이닝
+delay(1000)
+  .then(() => {
+    console.log('1초 후');
+    return delay(1000);
+  })
+  .then(() => {
+    console.log('2초 후');
+  });
+```
+
+함수가 Promise를 return하면 호출하는 쪽에서 `.then()` 사용 가능하다.
+
+---
+
 ## Promise 상태
 
 Promise 객체는 3가지 상태를 가진다.
