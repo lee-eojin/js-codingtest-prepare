@@ -72,6 +72,104 @@ for (const key in car) {
 
 배열에는 for...in 쓰지 말고 for...of를 쓴다.
 
+### for...in 특징 1: enumerable한 것만 출력
+
+객체의 속성에는 숨겨진 설정값이 있다.
+
+```javascript
+const obj = { name: 'Kim' };
+
+console.log(Object.getOwnPropertyDescriptor(obj, 'name'));
+// { value: 'Kim', writable: true, enumerable: true, configurable: true }
+```
+
+`enumerable: true`인 속성만 for...in으로 출력된다. enumerable은 '셀 수 있는'이라는 뜻이다.
+
+### for...in 특징 2: 부모 prototype도 출력
+
+상속받은 속성까지 순회한다.
+
+```javascript
+class Parent {}
+Parent.prototype.name = 'Park';
+
+const obj = new Parent();
+
+for (const key in obj) {
+  console.log(key);  // 'name' 출력됨 (부모 속성)
+}
+```
+
+내 속성만 출력하려면 `hasOwnProperty`로 필터링한다.
+
+```javascript
+for (const key in obj) {
+  if (obj.hasOwnProperty(key)) {
+    console.log(key);  // 내 속성만 출력
+  }
+}
+```
+
+---
+
+## for...of와 iterable
+
+for...of는 iterable한 자료형에만 사용 가능하다.
+
+### iterable이란?
+
+`[Symbol.iterator]()`라는 메서드를 가진 자료형이다.
+
+```javascript
+const arr = [1, 2, 3];
+console.log(arr[Symbol.iterator]);  // 함수가 존재함
+
+const obj = { a: 1 };
+console.log(obj[Symbol.iterator]);  // undefined (객체는 iterable 아님)
+```
+
+### iterable한 자료형들
+
+- Array
+- String
+- Map, Set
+- NodeList (querySelectorAll 결과)
+- arguments
+
+```javascript
+// 문자열도 iterable
+for (const char of 'hello') {
+  console.log(char);
+}
+// h, e, l, l, o
+
+// NodeList도 iterable
+const buttons = document.querySelectorAll('button');
+for (const btn of buttons) {
+  btn.addEventListener('click', handleClick);
+}
+```
+
+### 일반 객체는 for...of 불가
+
+```javascript
+const obj = { a: 1, b: 2 };
+
+for (const value of obj) {  // TypeError!
+  console.log(value);
+}
+
+// 객체는 for...in 또는 Object.keys() 사용
+for (const key in obj) {
+  console.log(obj[key]);
+}
+
+// 또는
+Object.keys(obj).forEach((key) => {
+  console.log(obj[key]);
+});
+```
+
 ---
 
 ## 언제 뭘 쓸까?
