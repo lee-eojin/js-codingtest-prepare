@@ -6,6 +6,139 @@ Jest로 코드가 예상대로 동작하는지 자동으로 확인한다.
 
 ---
 
+## 테스트 코드 빠르게 읽는 법 (실전용)
+
+시험에서 테스트 코드를 보고 **뭘 구현해야 하는지** 빠르게 파악하는 방법.
+
+---
+
+### 1. test("한글") 부분만 먼저 봐라
+
+```javascript
+test("로또 번호의 개수가 6개가 넘어가면 예외가 발생한다.", () => {
+```
+
+→ 이 한글이 **뭘 테스트하는지** 알려줌
+→ "6개 넘으면 에러 던져야 하는구나"
+
+---
+
+### 2. expect().toThrow("[ERROR]") = 에러 던져야 함
+
+```javascript
+expect(() => {
+  new Lotto([1, 2, 3, 4, 5, 6, 7]);
+}).toThrow("[ERROR]");
+```
+
+→ `[1,2,3,4,5,6,7]` 넣으면 `[ERROR]` 포함된 에러 던져야 통과
+→ 에러 메시지는 반드시 `[ERROR]`로 시작해야 함
+
+---
+
+### 3. mockQuestions = 입력 순서
+
+```javascript
+mockQuestions(["8000", "1,2,3,4,5,6", "7"]);
+```
+
+→ 첫 번째 `readLineAsync`: "8000" 반환
+→ 두 번째 `readLineAsync`: "1,2,3,4,5,6" 반환
+→ 세 번째 `readLineAsync`: "7" 반환
+
+**즉, 입력 순서가 구입금액 → 당첨번호 → 보너스번호**
+
+---
+
+### 4. mockRandoms = 랜덤값 고정
+
+```javascript
+mockRandoms([
+  [8, 21, 23, 41, 42, 43],
+  [3, 5, 11, 16, 32, 38],
+]);
+```
+
+→ 첫 번째 랜덤 호출: `[8, 21, 23, 41, 42, 43]` 반환
+→ 두 번째 랜덤 호출: `[3, 5, 11, 16, 32, 38]` 반환
+
+---
+
+### 5. logs 배열 = 출력 정답지 (가장 중요!)
+
+```javascript
+const logs = [
+  "8개를 구매했습니다.",
+  "[8, 21, 23, 41, 42, 43]",
+  "3개 일치 (5,000원) - 1개",
+  "총 수익률은 62.5%입니다.",
+];
+```
+
+→ 이 문자열들이 **정확히** Console.print로 출력되어야 통과
+→ 띄어쓰기, 쉼표, 괄호 하나라도 다르면 실패
+
+---
+
+### 6. expect(logSpy).toHaveBeenCalledWith(...)
+
+```javascript
+expect(logSpy).toHaveBeenCalledWith(expect.stringContaining(log));
+```
+
+- `toHaveBeenCalledWith`: 이 인자로 호출되었는지 확인
+- `expect.stringContaining(log)`: log 문자열이 **포함**되어 있으면 OK
+
+---
+
+### 7. runException = 에러 테스트 헬퍼
+
+```javascript
+const runException = async (input) => {
+  mockQuestions([input, ...INPUT_NUMBERS_TO_END]);
+  const app = new App();
+  await app.run();
+  expect(logSpy).toHaveBeenCalledWith(expect.stringContaining("[ERROR]"));
+};
+
+test("예외 테스트", async () => {
+  await runException("1000j");
+});
+```
+
+→ "1000j" 입력하면 `[ERROR]` 출력해야 함
+→ 잘못된 입력에 대한 예외 처리 필수
+
+---
+
+### 실전 요약 체크리스트
+
+| 봐야 할 것 | 의미 |
+|-----------|------|
+| `test("한글")` | 뭘 테스트하는지 |
+| `logs` 배열 | 출력 형식 정답 |
+| `mockQuestions` | 입력 순서 |
+| `mockRandoms` | 랜덤값 순서 |
+| `toThrow("[ERROR]")` | 에러 던져야 함 |
+| `stringContaining` | 문자열 포함 여부 |
+
+---
+
+### 출력 형식 주의사항
+
+테스트 코드의 logs를 보면 출력 형식을 정확히 알 수 있다:
+
+```javascript
+"8개를 구매했습니다."           // 숫자 + "개를 구매했습니다."
+"[8, 21, 23, 41, 42, 43]"      // 대괄호, 쉼표+공백
+"3개 일치 (5,000원) - 1개"     // 천단위 쉼표, 공백 위치
+"총 수익률은 62.5%입니다."     // 소수점 첫째자리
+```
+
+→ 이 형식 그대로 출력해야 테스트 통과
+
+---
+
 ## 기본 구조
 
 ```javascript
